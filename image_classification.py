@@ -17,6 +17,7 @@ import urllib2
 import sys
 import os
 
+import pickle
 
 def process_directory(directory):
     '''Returns an array of feature vectors for all the image files in a
@@ -113,8 +114,14 @@ def process_image(image, blocks=4):
 def show_usage():
     '''Prints how to use this program
     '''
-    print("Usage: %s [class A images directory] [class B images directory]" %
+    print()
+    print("Usage: %s train [class A images directory] [class B images directory]    <-- will train based on the directories and save the classifier" %
             sys.argv[0])
+    print("   or: %s test [real world images directory]                             <-- will load the classifier, test the images and return a classification result  " %
+            sys.argv[0])
+    print("   or: %s image [image filename]                                         <-- will load the classifier, test single image and return a classification result  " %
+            sys.argv[0])    
+    print()
     sys.exit(1)
 
 
@@ -170,7 +177,43 @@ def train(training_path_a, training_path_b, print_metrics=True):
     return classifier
 
 
-def main(training_path_a, training_path_b):
+
+def test_directory(classifier, directory):
+    '''Returns an array of feature vectors for all the image files in a
+    directory (and all its subdirectories). Symbolic links are ignored.
+
+    Args:
+      directory (str): directory to process.
+
+    Returns:
+      list of list of float: a list of feature vectors.
+    '''
+    number = 0
+    for root, _, files in os.walk(directory):
+        for file_name in files:
+            number = number +1
+            file_path = os.path.join(root, file_name)
+            img_feature = process_image_file(file_path)
+            result = ""
+            if img_feature:
+                result = classifier.predict(img_feature)
+            else: 
+                result = "[-]"
+            print( number, " ", result , " image:", file_name )
+
+
+
+def test_image( imagefile ):
+    with open('results/classifier.pickle', "r") as fp:
+        classifier = pickle.load(fp)    
+    img_feature = process_image_file(imagefile)
+    if img_feature:
+        result = classifier.predict(img_feature)
+    print(  result , " image:", imagefile )
+
+
+
+def train_main(training_path_a, training_path_b):
     '''Main function. Trains a classifier and allows to use it on images
     downloaded from the Internet.
 
@@ -180,6 +223,10 @@ def main(training_path_a, training_path_b):
     '''
     print('Training classifier...')
     classifier = train(training_path_a, training_path_b)
+
+    with open('results/classifier.pickle', "w") as fp:
+        pickle.dump(classifier, fp)
+
     while True:
         try:
             print("Input an image url (enter to exit): "),
@@ -195,10 +242,28 @@ def main(training_path_a, training_path_b):
             print(exception)
 
 
+def test_main( directory ):
+    # Load model from file
+    with open('results/classifier.pickle', "r") as fp:
+        classifier = pickle.load(fp)
+
+    test_directory( classifier, directory )
+
+
+
+
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 2:
         show_usage()
-    main(sys.argv[1], sys.argv[2])
+    elif sys.argv[1] == "train":
+        train_main(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == "image":
+        test_image( sys.argv[2] )
+    elif sys.argv[1] == "test":
+        test_main( sys.argv[2] )
+    else:
+        show_usage()
+
 
 
 
