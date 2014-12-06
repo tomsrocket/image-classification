@@ -98,7 +98,15 @@ def process_image(image, blocks=4):
       RGB.
     '''
     if not image.mode == 'RGB':
-        return None
+        print( "Image is not RGB.. converting..")
+
+        # replace alpha channel with white color
+        imgg = Image.new('RGB', image.size, (255, 255, 255))
+        imgg.paste(image, None)        
+        image = imgg
+        # return None
+
+
     feature = [0] * blocks * blocks * blocks
     pixel_count = 0
     for pixel in image.getdata():
@@ -198,7 +206,7 @@ def test_directory(classifier, directory):
             if img_feature:
                 result = classifier.predict(img_feature)
             else: 
-                result = "[-]"
+                result = "[?]"
             print( number, " ", result , " image:", file_name )
 
 
@@ -207,10 +215,20 @@ def test_image( imagefile ):
     with open('results/classifier.pickle', "r") as fp:
         classifier = pickle.load(fp)    
     img_feature = process_image_file(imagefile)
+    result = "[?]"
     if img_feature:
         result = classifier.predict(img_feature)
     print(  result , " image:", imagefile )
 
+
+def test_url( imagefile ):
+    with open('results/classifier.pickle', "r") as fp:
+        classifier = pickle.load(fp)    
+    img_feature = process_image_url(imagefile)
+    result = "[?]"
+    if img_feature:
+        result = classifier.predict(img_feature)
+    print( result , " image:", imagefile )
 
 
 def train_main(training_path_a, training_path_b):
@@ -257,6 +275,8 @@ if __name__ == '__main__':
         show_usage()
     elif sys.argv[1] == "train":
         train_main(sys.argv[2], sys.argv[3])
+    elif sys.argv[1] == "url":
+        test_url( sys.argv[2] )
     elif sys.argv[1] == "image":
         test_image( sys.argv[2] )
     elif sys.argv[1] == "test":
