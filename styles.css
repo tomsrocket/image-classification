@@ -1,0 +1,12 @@
+html {background-color:#333;color:white;}
+a {color:#bbb;}
+a:hover {color:#999;}
+a:active {color:#888;}
+.result1 {background-color:#6f6;}
+.result0 {background-color:#f66;}
+.res img {height:50px ;max-width:490px;}
+.res {border:2px solid black; border-radius:10px;margin-top:5px;
+text-align: center;
+width: 500px;
+margin-left: 30%;
+padding: 2px;}
