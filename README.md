@@ -29,6 +29,20 @@ Or check out the really cool scraper that was written by
 * http://simon-schraeder.de/
 
 
+Download example other images
+-----------------------------
+
+Download mid resolution images from gratisography.com:
+
+1. Download index file:
+
+        wget http://gratisography.com/
+
+2. Download all images that match the filename pattern "pictures*.jpg":
+
+        grep -oP 'pictures[^"]+jpg' index.html | xargs -i wget http://gratisography.com/{}
+
+
 Install Jupyter
 ---------------
 
@@ -38,6 +52,12 @@ Install Jupyter
         jupyter notebook
 
 # Build a Jupyter notebook
+
+## Useful links:
+
+* Magic commands for code cells https://ipython.org/ipython-doc/3/interactive/magics.html
+
+
 ## iPython example code snippets
 
 * display images from a directory by using html output:
