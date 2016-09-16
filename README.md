@@ -53,9 +53,16 @@ Install Jupyter
 
 # Build a Jupyter notebook
 
-## Useful links:
+## Useful information & links
 
 * Magic commands for code cells https://ipython.org/ipython-doc/3/interactive/magics.html
+        %load filename.py => copy file content into current cell
+        %run filename.py => run file in background, declared methods can be used in scope of notebook
+
+* If you want to commit your ipynb files, choose "clear data and restart kernel" inside jupyter,
+  so that the outputs will be cleared from the notebook files.
+
+* Doing a presentation? Keep an eye on the time: http://www.timer-tab.com/
 
 
 ## iPython example code snippets
