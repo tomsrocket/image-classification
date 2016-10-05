@@ -17,11 +17,15 @@ This is an example set of bash commands that can be used to download logos from 
 
 2. Extract urls of the good pages
 
-        grep -oR 'http[^"]*logo[^/"]*/' index.html | uniq | sort > filelist.txt
+        grep -oP 'http[^"]*logo[^/"]*/' index.html | uniq | sort > filelist.txt
 
 3. Download the logo files
 
        wget -P logos-incoming/ -r -l 1 -w 0.1 -nd -A Company-Logo.jpg -i filelist.txt
+
+4. Get more logos from Logopedia http://logos.wikia.com/wiki/Logopedia
+
+        This is your homework. :-)
 
 Or check out the really cool scraper that was written by
 * Simon Schrader
@@ -29,8 +33,8 @@ Or check out the really cool scraper that was written by
 * http://simon-schraeder.de/
 
 
-Download example other images
------------------------------
+Download "other" images
+-----------------------
 
 Download mid resolution images from gratisography.com:
 
@@ -43,15 +47,22 @@ Download mid resolution images from gratisography.com:
         grep -oP 'pictures[^"]+jpg' index.html | xargs -i wget http://gratisography.com/{}
 
 
+Download images from pixabay
+
+1. wget --header="Accept: text/html" --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0" 'https://pixabay.com/de/photos/?image_type=photo&cat=&min_width=&min_height=&q=kaffee&order='
+
+2. grep -oP '\/static\/uploads[^.]+_340.jpg' index.html | xargs -i wget --header="Accept: text/html" --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:21.0) Gecko/20100101 Firefox/21.0" https://pixabay.com{}
+
 Install Jupyter
 ---------------
 
 1. Install Anaconda https://www.continuum.io/downloads
-2. In your favorite directory run:  
+2. Change to the directory with the image classification presentation and run the jupyer notebook aplication:  
 
+        cd jupyter-notebook
         jupyter notebook
 
-# Build a Jupyter notebook
+# How to build a Jupyter notebook
 
 ## Useful information & links
 
@@ -82,3 +93,10 @@ for image in images:
     string += '<img style="float:left;width:100px;height:70px;oveflow:hidden" src="' +  image + '"</h1>';
 display(HTML(string))
 ```
+
+Run the image classifier
+------------------------
+
+Change to the directory "hackathon/", then run the following command. It will show usage information.
+
+    python image_classification.py
